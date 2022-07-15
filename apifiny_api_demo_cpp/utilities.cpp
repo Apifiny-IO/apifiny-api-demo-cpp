@@ -170,6 +170,7 @@ void ExchangeApi::WsRun(){
                 << std::endl;
         } else if(input.substr(0, 7) == "connect")
         {
+            
             string enc_str_ws;
             std::string base_url;
             std::string cmd;
@@ -181,12 +182,11 @@ void ExchangeApi::WsRun(){
             if (input == "connect"){
                 int id = endpoint.connect(md_ws, "");
                 connection_mp[std::to_string(id)] = md_ws;
-                id = endpoint.connect(order_new_ws, GetToken());
+                id = endpoint.connect(order_new_ws, "");
                 connection_mp[std::to_string(id)] = order_new_ws;
                 for (auto it : connection_mp){
                     std::cout << it.first << " " << it.second << std::endl;
                 }
-                std::cout << GetToken() << std::endl;
                 std::cout << std::endl;
             }
             else if (base_url != md_ws && base_url != order_new_ws){
@@ -195,12 +195,12 @@ void ExchangeApi::WsRun(){
             else{
                 int id{};
                 if (base_url == order_new_ws){
-                    enc_str_ws = GetToken();
+                    //enc_str_ws = auth.dump();
                 }
                 if(input.size() > 7)
                 {
                     std::string conn_str = input.substr(8);
-                    id = endpoint.connect(conn_str, enc_str_ws);
+                    id = endpoint.connect(conn_str, "");
                     connection_mp[std::to_string(id)] = conn_str;
                 }
                 cur_id = id;
@@ -225,6 +225,9 @@ void ExchangeApi::WsRun(){
         }
         else if (input.substr(0,4) == "send")
         {
+            auto millisec_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            string sign = HmacSha256(dic.GetSecretKey(), "timestamp=" + std::to_string(millisec_since_epoch));
+            json auth = {{"action","auth"},{"data", {{"timestamp", std::to_string(millisec_since_epoch)},{"apiKey", dic.GetApiKeyId()}, {"signature", sign}}}};
             std::stringstream ss(input);
             std::string cmd;
             std::string action_name;
@@ -235,11 +238,15 @@ void ExchangeApi::WsRun(){
                 std::cout << "wrong action name!" << std::endl;
                 continue;
             }
+            if (connection_mp[std::to_string(cur_id)] != "wss://api.apifiny.com/md/ws/v1"){
+                endpoint.send(cur_id, auth.dump());
+            }
+            std::cout << auth.dump() << std::endl;
+            std::cout << sign << std::endl;
             std::string message = action_mp[action_name].GetJson().dump();
             if(message != ""){
                 endpoint.send(cur_id, message);
             }
-            long millisec_since_epoch;
             if (action_name.substr(action_name.size() - 7, 7) == "channel"){
                 millisec_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() + 30000;
             }
@@ -323,6 +330,48 @@ void ExchangeApi::WsRun(){
 }
 
 string ExchangeApi::HttpRequest(json j, Method method, string base_url, Data_Type type){
+    std::string str;
+    string enc_str;
+    cpr::Response r;
+    cpr::Parameters parameters;
+    j["timestamp"] = std::to_string(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
+    j["recvWindow"] = "4800"; //recvWindow is optional, and default to be 5000, no more than 60000
+    if (method == Method::GET || type == Data_Type::HEADER){
+        json::iterator it = j.begin();
+        while (it != j.end()){
+            parameters.Add({it.key(), it.value()});
+            it++;
+        }
+        str = PrepareParams(j);
+        //std::cout << str << std::endl;
+        enc_str = GetSign(str);
+    }
+    else{
+        str = j.dump();
+        enc_str = GetSign(str);
+    }
+    if (method == Method::GET){
+        r = cpr::Get(cpr::Url{base_url},
+                     parameters,
+                     cpr::Header{{"signature", enc_str}, {"apiKey", dic.GetApiKeyId()}});
+    }
+    else if (method == Method::POST){
+        r = cpr::Post(cpr::Url{base_url},
+                      cpr::Body{str},
+                      cpr::Header{{"signature", enc_str}, {"apiKey", dic.GetApiKeyId()}, {"Content-Type", "application/json"}});
+    }
+    std::cout << base_url << std::endl; //api.apifiny.com/ac/v2/GBBO/asset/listBalance
+    std::cout << str << std::endl; //accountId=STA-APIFINY_1301898&venue=INDEPENDENTRESERVE
+    std::cout << "account id: " << dic.GetAccountId() << std::endl;
+    std::cout << "secret_key_id id: " << dic.GetApiKeyId() << std::endl;
+    std::cout << "secret_key: " << dic.GetSecretKey() << std::endl;
+    std::cout << "signature: " << enc_str << std::endl;
+    std::cout << r.text << std::endl;
+    std::cout << std::endl;
+    return r.text;
+}
+
+string ExchangeApi::HttpRequestNew(json j, Method method, string base_url, Data_Type type){
      //& reference for json, enum for type method
     std::string str;
     string enc_str;
@@ -376,6 +425,10 @@ string ExchangeApi::GetToken(string params){
     return GetJwtToken(dic.GetSecretKey(), dic.GetAccountId(), dic.GetApiKeyId(), params);
 }
 
+string ExchangeApi::GetSign(string params){
+    return GetSignature(dic.GetSecretKey(), dic.GetAccountId(), dic.GetApiKeyId(), params);
+}
+
 void ExchangeApi::SetUpActionMap(){
     action_mp["ws_orderbook_channel"] = Action(ws_orderbook_channel,ws_orderbook_payload);
     action_mp["ws_orderbook_channel_unsub"] = Action(ws_orderbook_channel_unsub, j_empty);
@@ -395,3 +448,4 @@ void ExchangeApi::SetUpActionMap(){
 
 
     
+

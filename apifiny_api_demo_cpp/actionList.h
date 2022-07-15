@@ -14,9 +14,9 @@ using json = nlohmann::json;
 using string = std::string;
 using vector = std::vector<std::string>;
 
-inline const string ACCOUNT_ID = "";
-inline const string API_KEY_ID = "";
-inline const string SECRET_KEY = "";
+inline const string ACCOUNT_ID = "STA-APIFINY_1111111";
+inline const string API_KEY_ID = "33604**********9f14";
+inline const string SECRET_KEY = "35AEB******************73617";
 inline const string SYMBOL = "BTCUSD";
 inline const string VENUE = "GBBO";
 inline const vector VENUES = {"GBBO"};

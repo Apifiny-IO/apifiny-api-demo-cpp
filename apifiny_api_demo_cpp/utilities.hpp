@@ -13,10 +13,11 @@
 #include <chrono>
 #include <vector>
 #include <map>
+#include <unordered_set>
 #include "helpers.hpp"
 #include "websocket.hpp"
 #include "actionList.h"
-
+#include<unistd.h>
 
 using string = std::string;
 using vector = std::vector<std::string>;
@@ -197,14 +198,20 @@ public:
     void HttpRequestsDemo();
     void AddWsAction(string action_name, json action);
     void EraseWsAction(string action_name);
+    void printExchanges();
+    void printSymbols();
     //void run_ws_action(string action_name, string base_url = "", bool encoded = false);
 private:
     InfoDic dic;
     unordered_map mp;
     string GetToken(string params = "");
+    string GetSign(string params = "");
     unordered_map connection_mp;
+    vector exchanges;
+    vector symbols;
     std::map<std::string, Action> action_mp;
     string HttpRequest(json j, Method method, string base_url, Data_Type type = Data_Type::HEADER);
+    string HttpRequestNew(json j, Method method, string base_url, Data_Type type = Data_Type::HEADER);
     void SetUpActionMap();
 };
 

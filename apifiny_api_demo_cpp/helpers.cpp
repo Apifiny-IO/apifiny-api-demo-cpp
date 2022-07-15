@@ -96,7 +96,10 @@ std::string GetJwtToken(string secretKey, string accountId, string secretKeyId, 
     //std::cout << "token: " << enc_str << std::endl;
     return enc_str;
 }
-
+using json=nlohmann::json;
+std::string GetSignature(string secretKey, string accountId, string secretKeyId, std::string params){
+    return HmacSha256(secretKey, params);
+}
 std::string B2aHex(const std::uint8_t *p, std::size_t n) {
     static const char hex[] = "0123456789abcdef";
     std::string res;

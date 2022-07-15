@@ -39,5 +39,5 @@ void SignalCallbackHandler(int signum);
 std::string B2aHex(const std::uint8_t *p, std::size_t n);
 std::string Sha256Single(const std::string s);
 std::string HmacSha256(const std::string key,  const std::string data);
-
+std::string GetSignature(string secretKey, string accountId, string secretKeyId, std::string params);
 #endif /* helpers_hpp */
