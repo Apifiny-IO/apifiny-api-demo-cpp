@@ -4,6 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/Apifiny-IO/apifiny-api-demo-cpp)](https://github.com/Apifiny-IO/apifiny-api-demo-cpp/stargazers)
 [![GitHub license](https://img.shields.io/github/license/Apifiny-IO/apifiny-api-demo-cpp)](https://github.com/Apifiny-IO/apifiny-api-demo-cpp/blob/main/LICENSE)
 [![contributors](https://img.shields.io/github/contributors/Apifiny-IO/apifiny-api-demo-cpp)](https://github.com/Apifiny-IO/apifiny-api-demo-cpp/graphs/contributors)
+[![GitHub downloads](https://img.shields.io/github/downloads/Apifiny-IO/apifiny-api-demo-cpp/total)](https://github.com/Apifiny-IO/apifiny-api-demo-cpp)
 
 A c++ project for demonstrating APIFINY OPEN API.  
 * Supported APIs:
