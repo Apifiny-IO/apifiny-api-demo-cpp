@@ -14,17 +14,16 @@ using json = nlohmann::json;
 using string = std::string;
 using vector = std::vector<std::string>;
 
-inline const string ACCOUNT_ID = "STA-APIFINY_1111111";
-inline const string API_KEY_ID = "33604**********9f14";
-inline const string SECRET_KEY = "35AEB******************73617";
+inline const string ACCOUNT_ID = "STA-APIFINY_11111111";
+inline const string API_KEY_ID = "583*********1dfa6b5";
+inline const string SECRET_KEY = "01********************4C793";
 inline const string SYMBOL = "BTCUSD";
 inline const string VENUE = "GBBO";
 inline const vector VENUES = {"GBBO"};
 inline const string API_HTTP = "https://api.apifiny.com/ac/v2/GBBO";
 inline const string HOST = "https://api.apifiny.com";
 inline const string MD_WS = "wss://api.apifiny.com/md/ws/v1";
-inline const string ORDER_PUSH_WS = "wss://apifiny.com/ac/ws/v2/GBBO/asset";
-inline const string ORDER_NEW_WS = "wss://apicb.apifiny.com/ws/trading";
+inline const string ORDER_NEW_WS = "wss://apicb.apifiny.com/ws/stream";
 
 inline json j_empty;
 
@@ -47,6 +46,10 @@ inline json j = {
 
 inline json ws_orderbook_channel = {{"channel", "orderbook"}, {"symbol", "BTCUSDT"}, {"venues", json::array({"COINBASEPRO"})}, {"action", "sub"}};
 
+inline json ws_orderbook_channel_pack = {{"channel", "orderbook"}, {"symbol", "BTCUSDT"}, {"venues", json::array({"BINANCE","BINANCEUS","COINBASEPRO","FTX","GBBO","HUOBI","KUCOIN","OKCOIN","OKX","BITBAY","BITHUMB","BITMAX","BITSO","BITSTAMP","BITTREX","BLOCKCHAIN","COINBASEPROUK","COINONE","CRYPTO","EXMO","GATEIO","GEMINI","INDEPENDENTRESERVE","INDODAX","ITBIT","KORBIT","KRAKEN","KRAKENUK","LIQUID","UPBIT"})}, {"action", "sub"}};
+
+inline json ws_orderbook_channel_pack_unsub = {{"channel", "orderbook"}, {"symbol", "BTCUSDT"}, {"venues", json::array({"BINANCE","BINANCEUS","COINBASEPRO","FTX","GBBO","HUOBI","KUCOIN","OKCOIN","OKX","BITBAY","BITHUMB","BITMAX","BITSO","BITSTAMP","BITTREX","BLOCKCHAIN","COINBASEPROUK","COINONE","CRYPTO","EXMO","GATEIO","GEMINI","INDEPENDENTRESERVE","INDODAX","ITBIT","KORBIT","KRAKEN","KRAKENUK","LIQUID","UPBIT"})}, {"action", "unsub"}};
+
 inline json ws_orderbook_payload = {
     {"venues", json::array({"VENUE1"})},
     {"channel", "orderbook"},
@@ -68,7 +71,7 @@ inline json ws_orderbook_payload = {
 
 
 
-inline json ws_orderbook_channel_unsub = {{"channel", "orderbook"}, {"symbol", "BTCUSDT"}, {"venues", json::array({"COINBASEPRO"})}, {"action", "unsub"}};
+inline json ws_orderbook_channel_unsub = {{"channel", "orderbook"}, {"symbol", "BTCUSDT"}, {"venues", json::array({"BITMAX"})}, {"action", "unsub"}};
 
 inline json ws_trades_channel = {{"channel", "trade"}, {"symbol", "BTCUSDT"}, {"venues", json::array({"COINBASEPRO"})}, {"action", "sub"}};
 

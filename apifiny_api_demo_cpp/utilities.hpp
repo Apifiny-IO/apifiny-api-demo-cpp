@@ -70,10 +70,9 @@ public:
         api_http = API_HTTP;
         host = HOST;
         md_ws = MD_WS;
-        order_push_ws = ORDER_PUSH_WS;
         order_new_ws = ORDER_NEW_WS;
     }
-    InfoDic(string account_id, string api_key_id, string secret_key, string symbol, string venue, string api_http, string host, string md_ws, string order_push_ws, string order_new_ws, vector venues): account_id(account_id), api_key_id(api_key_id), secret_key(secret_key), symbol(symbol), venue(venue), api_http(api_http), host(host), md_ws(md_ws), order_push_ws(order_push_ws), order_new_ws(order_new_ws){
+    InfoDic(string account_id, string api_key_id, string secret_key, string symbol, string venue, string api_http, string host, string md_ws, string order_push_ws, string order_new_ws, vector venues): account_id(account_id), api_key_id(api_key_id), secret_key(secret_key), symbol(symbol), venue(venue), api_http(api_http), host(host), md_ws(md_ws), order_new_ws(order_new_ws){
         this -> venues = venues;
     }
         string GetAccountId()
@@ -146,14 +145,6 @@ public:
         {
             this -> md_ws = md_ws;
         }
-        string GetOrderPushWs()
-        {
-            return this -> order_push_ws;
-        }
-        void SetOrderPushWs(string order_push_ws)
-        {
-            this -> order_push_ws = order_push_ws;
-        }
         string GetOrderNewWs()
         {
             return this -> order_new_ws;
@@ -179,7 +170,6 @@ private:
     string api_http;
     string host;
     string md_ws;
-    string order_push_ws;
     string order_new_ws;
     vector venues;
 };
